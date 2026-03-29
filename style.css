@@ -251,18 +251,19 @@ header {
 }
 
 .cal-cell {
-  min-height: 64px; padding: 4px 5px;
+  height: 80px; padding: 4px 5px;
   border-right: 1px solid var(--border);
   border-bottom: 1px dashed var(--border);
   cursor: pointer; background: var(--surface);
   transition: background .1s;
   position: relative;
+  overflow: hidden;
 }
 .cal-cell:hover { background: #f5f0e5; }
 .cal-cell.other-month { background: var(--bg); opacity: .6; }
 .cal-cell.other-month .day-num { color: #b8a898; }
 .cal-cell.other-month .day-num.holiday { color: #c47a72; }
-.cal-cell.today .day-num {
+.cal-cell.today .day-num-inner {
   background: var(--red); color: #fff;
   border-radius: 50%;
   width: 22px; height: 22px;
@@ -271,19 +272,29 @@ header {
 }
 
 .day-num {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  margin-bottom: 3px;
+  line-height: 1;
+}
+.day-num-inner {
   font-family: 'Noto Serif JP', Georgia, serif;
   font-size: .82rem; font-weight: 700;
   width: 22px; height: 22px;
   display: flex; align-items: center; justify-content: center;
-  flex-direction: column;
-  margin-bottom: 2px;
+  flex-shrink: 0;
 }
-.day-num.holiday { color: var(--red); }
+.day-num.holiday .day-num-inner { color: var(--red); }
 .holiday-label {
-  font-size: 0.48rem; color: var(--red);
-  line-height: 1; white-space: nowrap;
+  font-size: 0.46rem; color: var(--red);
+  line-height: 1.2; white-space: nowrap;
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 400;
+  padding-top: 4px;
+  max-width: 38px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event-dots { display: flex; flex-wrap: wrap; gap: 2px; padding: 2px 0; }
@@ -503,7 +514,7 @@ header {
 
 /* ── Mobile tweaks ──────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
-  .cal-cell { min-height: 56px; padding: 3px; }
+  .cal-cell { height: 68px; padding: 3px; }
   .event-dot { font-size: .62rem; }
   .event-card { padding: 9px 10px; }
   .row-2 { grid-template-columns: 1fr; }

@@ -211,7 +211,12 @@ function makeCell(dateStr, dayNum, otherMonth, events, todayStr) {
   const numEl = document.createElement('div');
   const isRed = holiday !== null || isHolidayRange(dateStr);
   numEl.className = 'day-num' + (isRed ? ' holiday' : '');
-  numEl.textContent = dayNum;
+
+  const innerEl = document.createElement('span');
+  innerEl.className = 'day-num-inner';
+  innerEl.textContent = dayNum;
+  numEl.appendChild(innerEl);
+
   if (holiday) {
     const label = document.createElement('span');
     label.className = 'holiday-label';
