@@ -35,12 +35,12 @@
 
 <!-- ── Tabs ────────────────────────────────────────────────────────────── -->
 <nav class="tabs">
-  <button class="tab active" data-tab="calendar">月曆</button>
-  <button class="tab" data-tab="upcoming">近期事項</button>
+  <button class="tab active" data-tab="upcoming">近期事項</button>
+  <button class="tab" data-tab="calendar">月曆</button>
 </nav>
 
 <!-- ── Calendar View ───────────────────────────────────────────────────── -->
-<div id="view-calendar" class="view">
+<div id="view-calendar" class="view hidden">
   <div class="cal-nav">
     <button id="cal-prev" class="nav-btn">&#8249;</button>
     <span id="cal-title" class="cal-title"></span>
@@ -60,7 +60,7 @@
 </div>
 
 <!-- ── Upcoming View ───────────────────────────────────────────────────── -->
-<div id="view-upcoming" class="view hidden">
+<div id="view-upcoming" class="view">
   <div id="upcoming-list" class="upcoming-list"></div>
 </div>
 
