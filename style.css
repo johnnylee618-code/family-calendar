@@ -16,6 +16,11 @@
   --shadow:    0 1px 3px rgba(60,40,20,.08), 0 2px 8px rgba(60,40,20,.05);
 }
 
+/* ── Disable double-tap zoom (app-like feel) ────────────────────────────── */
+html {
+  touch-action: manipulation;
+}
+
 html { height: 100%; }
 body {
   min-height: 100%;
