@@ -13,6 +13,43 @@
 // ── Fixed family members ───────────────────────────────────────────────────────
 const FIXED_MEMBERS = ['Johnny', 'Zola', 'Zina'];
 
+// ── Themes ────────────────────────────────────────────────────────────────────
+const THEMES = [
+  { id: 'techo',  name: '手帳風',     dot: '#c94040' },
+  { id: 'matcha', name: '日系抹茶風', dot: '#6b9e74' },
+  { id: 'light',  name: '亮色',       dot: '#3b82f6' },
+  { id: 'dark',   name: '暗色',       dot: '#8a9bb0' },
+];
+
+function loadTheme() {
+  applyTheme(localStorage.getItem('fc_theme') || 'techo');
+}
+
+function applyTheme(id) {
+  document.documentElement.dataset.theme = id;
+  localStorage.setItem('fc_theme', id);
+  document.querySelectorAll('#theme-dropdown .dropdown-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.themeId === id);
+  });
+}
+
+function renderThemeDropdown() {
+  const current = localStorage.getItem('fc_theme') || 'techo';
+  const dd = document.getElementById('theme-dropdown');
+  dd.innerHTML = THEMES.map(t => `
+    <div class="dropdown-item${t.id === current ? ' active' : ''}" data-theme-id="${t.id}">
+      <span class="dot-indicator" style="background:${t.dot}"></span>
+      ${t.name}
+    </div>
+  `).join('');
+  dd.querySelectorAll('.dropdown-item').forEach(el => {
+    el.addEventListener('click', () => {
+      applyTheme(el.dataset.themeId);
+      dd.classList.add('hidden');
+    });
+  });
+}
+
 // ── Taiwan public holidays（比照行政院行事曆） ────────────────────────────────────
 const TW_HOLIDAYS = {
   // ── 每年固定日期國定假日 ──
@@ -522,13 +559,20 @@ document.getElementById('user-chip').addEventListener('click', e => {
   renderUserDropdown();
   document.getElementById('user-dropdown').classList.toggle('hidden');
 });
+document.getElementById('theme-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  renderThemeDropdown();
+  document.getElementById('theme-dropdown').classList.toggle('hidden');
+});
 document.addEventListener('click', () => {
   document.getElementById('user-dropdown').classList.add('hidden');
+  document.getElementById('theme-dropdown').classList.add('hidden');
 });
 
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 (function init() {
+  loadTheme();
   loadLocal();
   if (!state.nickname) {
     showNicknameOverlay();
