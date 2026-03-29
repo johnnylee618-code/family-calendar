@@ -1,3 +1,15 @@
+// ── Disable double-tap zoom on iOS ────────────────────────────────────────────
+;(function () {
+  let lastTap = 0;
+  document.addEventListener('touchend', function (e) {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      e.preventDefault();
+    }
+    lastTap = now;
+  }, { passive: false });
+})();
+
 // ── Fixed family members ───────────────────────────────────────────────────────
 const FIXED_MEMBERS = ['Johnny', 'Zola', 'Zina'];
 
