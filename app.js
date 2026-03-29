@@ -48,6 +48,32 @@ function getHoliday(dateStr) {
   return TW_HOLIDAYS[`**${mmdd}`] || null;
 }
 
+// ── 連假完整區間（含相鄰週六日）────────────────────────────────────────────────
+const TW_HOLIDAY_RANGES = [
+  // 2025
+  ['2025-01-25', '2025-02-02'],  // 春節
+  ['2025-02-28', '2025-03-02'],  // 和平紀念日
+  ['2025-04-03', '2025-04-06'],  // 兒童節/清明
+  ['2025-05-30', '2025-06-01'],  // 端午節
+  ['2025-09-27', '2025-09-29'],  // 教師節
+  ['2025-10-04', '2025-10-06'],  // 中秋節
+  ['2025-10-10', '2025-10-12'],  // 國慶日
+  ['2025-10-24', '2025-10-26'],  // 台灣光復節
+  // 2026
+  ['2026-02-14', '2026-02-22'],  // 春節
+  ['2026-02-27', '2026-03-01'],  // 和平紀念日
+  ['2026-04-03', '2026-04-05'],  // 兒童節/清明
+  ['2026-05-01', '2026-05-03'],  // 勞動節
+  ['2026-06-19', '2026-06-21'],  // 端午節
+  ['2026-09-25', '2026-09-28'],  // 中秋節+教師節
+  ['2026-10-09', '2026-10-11'],  // 國慶日
+  ['2026-10-24', '2026-10-26'],  // 台灣光復節
+  ['2026-12-25', '2026-12-27'],  // 行憲紀念日
+];
+function isHolidayRange(dateStr) {
+  return TW_HOLIDAY_RANGES.some(([s, e]) => dateStr >= s && dateStr <= e);
+}
+
 // ── Member color palette ──────────────────────────────────────────────────────
 const COLOR_PALETTE = [
   '#4f46e5', '#e11d48', '#0891b2', '#16a34a',
@@ -182,7 +208,8 @@ function makeCell(dateStr, dayNum, otherMonth, events, todayStr) {
     (dateStr === todayStr ? ' today' : '');
 
   const numEl = document.createElement('div');
-  numEl.className = 'day-num' + (holiday ? ' holiday' : '');
+  const isRed = holiday !== null || isHolidayRange(dateStr);
+  numEl.className = 'day-num' + (isRed ? ' holiday' : '');
   numEl.textContent = dayNum;
   if (holiday) {
     const label = document.createElement('span');
