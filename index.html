@@ -40,6 +40,9 @@
   <button class="tab" data-tab="calendar">月曆</button>
 </nav>
 
+<!-- ── Main Layout (side-by-side on desktop) ────────────────────────────── -->
+<div class="main-layout">
+
 <!-- ── Calendar View ───────────────────────────────────────────────────── -->
 <div id="view-calendar" class="view hidden">
   <div class="cal-nav">
@@ -62,8 +65,11 @@
 
 <!-- ── Upcoming View ───────────────────────────────────────────────────── -->
 <div id="view-upcoming" class="view">
+  <div class="upcoming-panel-header">近期事項</div>
   <div id="upcoming-list" class="upcoming-list"></div>
 </div>
+
+</div><!-- /.main-layout -->
 
 <!-- ── FAB ────────────────────────────────────────────────────────────── -->
 <button id="fab" class="fab" title="新增事項">＋</button>

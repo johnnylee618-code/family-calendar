@@ -140,6 +140,63 @@ header {
 }
 .tab.active { color: var(--red); border-bottom-color: var(--red); font-weight: 600; }
 
+/* ── Main Layout (desktop: two columns) ────────────────────────────────── */
+.main-layout {
+  display: block;
+}
+
+@media (min-width: 641px) {
+  /* Hide tabs on desktop — both panels always visible */
+  nav.tabs { display: none; }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    min-height: calc(100vh - 54px);
+  }
+
+  /* Override hidden so both panels show on desktop */
+  .main-layout .view {
+    display: block !important;
+  }
+
+  #view-calendar {
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 54px;
+    max-height: calc(100vh - 54px);
+    overflow-y: auto;
+  }
+
+  #view-upcoming {
+    max-height: calc(100vh - 54px);
+    overflow-y: auto;
+  }
+}
+
+/* ── Upcoming panel heading (desktop only) ──────────────────────────────── */
+.upcoming-panel-header {
+  display: none;
+}
+@media (min-width: 641px) {
+  .upcoming-panel-header {
+    display: block;
+    font-family: 'Noto Serif JP', Georgia, serif;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--muted);
+    padding: 14px 16px 0;
+  }
+  .upcoming-panel-header::after {
+    content: '';
+    display: block;
+    margin-top: 8px;
+    border-bottom: 1px dashed var(--border);
+  }
+}
+
 /* ── Views ──────────────────────────────────────────────────────────────── */
 .view { padding: 0 0 80px; }
 .hidden { display: none !important; }
