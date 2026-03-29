@@ -1,3 +1,35 @@
+// ── Fixed family members ───────────────────────────────────────────────────────
+const FIXED_MEMBERS = ['Johnny', 'Zola', 'Zina'];
+
+// ── Taiwan public holidays ─────────────────────────────────────────────────────
+const TW_HOLIDAYS = {
+  // 固定假日
+  '**-01-01': '元旦',
+  '**-02-28': '和平紀念日',
+  '**-04-04': '兒童節',
+  '**-10-10': '國慶日',
+  // 2025 農曆假日
+  '2025-01-28': '除夕',
+  '2025-01-29': '春節',
+  '2025-01-30': '春節',
+  '2025-01-31': '春節',
+  '2025-02-03': '春節補假',
+  '2025-06-01': '端午節',
+  '2025-10-06': '中秋節',
+  // 2026 農曆假日
+  '2026-02-17': '除夕',
+  '2026-02-18': '春節',
+  '2026-02-19': '春節',
+  '2026-02-20': '春節',
+  '2026-05-21': '端午節',
+  '2026-09-25': '中秋節',
+};
+function getHoliday(dateStr) {
+  if (TW_HOLIDAYS[dateStr]) return TW_HOLIDAYS[dateStr];
+  const mmdd = dateStr.slice(4); // "-MM-DD"
+  return TW_HOLIDAYS[`**${mmdd}`] || null;
+}
+
 // ── Member color palette ──────────────────────────────────────────────────────
 const COLOR_PALETTE = [
   '#4f46e5', '#e11d48', '#0891b2', '#16a34a',
@@ -30,6 +62,7 @@ function loadLocal() {
   try {
     state.knownMembers = JSON.parse(localStorage.getItem('fc_known_members') || '[]');
   } catch { state.knownMembers = []; }
+  if (state.knownMembers.length === 0) state.knownMembers = [...FIXED_MEMBERS];
 }
 function saveNickname(name) {
   state.nickname = name;
@@ -91,7 +124,7 @@ function renderCalendar() {
   document.getElementById('cal-title').textContent =
     `${year} 年 ${month + 1} 月`;
 
-  const firstDay    = new Date(year, month, 1).getDay();
+  const firstDay    = (new Date(year, month, 1).getDay() + 6) % 7; // 週一=0
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const daysInPrev  = new Date(year, month, 0).getDate();
   const todayStr    = toDateStr(new Date());
@@ -116,6 +149,7 @@ function renderCalendar() {
   }
   const total    = firstDay + daysInMonth;
   const trailing = total % 7 === 0 ? 0 : 7 - (total % 7);
+
   for (let d = 1; d <= trailing; d++) {
     const dateStr = toDateStr(new Date(year, month + 1, d));
     cells.appendChild(makeCell(dateStr, d, true, eventMap[dateStr] || [], todayStr));
@@ -123,14 +157,21 @@ function renderCalendar() {
 }
 
 function makeCell(dateStr, dayNum, otherMonth, events, todayStr) {
+  const holiday = getHoliday(dateStr);
   const cell = document.createElement('div');
   cell.className = 'cal-cell' +
     (otherMonth ? ' other-month' : '') +
     (dateStr === todayStr ? ' today' : '');
 
   const numEl = document.createElement('div');
-  numEl.className = 'day-num';
+  numEl.className = 'day-num' + (holiday ? ' holiday' : '');
   numEl.textContent = dayNum;
+  if (holiday) {
+    const label = document.createElement('span');
+    label.className = 'holiday-label';
+    label.textContent = holiday;
+    numEl.appendChild(label);
+  }
   cell.appendChild(numEl);
 
   cell.addEventListener('click', () => openModal(null, dateStr));
@@ -322,26 +363,20 @@ function showNicknameOverlay() {
 
   const listEl = document.getElementById('known-members-list');
   listEl.innerHTML = '';
-  state.knownMembers.forEach(m => {
+  FIXED_MEMBERS.forEach(m => {
     const chip = document.createElement('span');
     chip.className   = 'chip selected';
     chip.style.background = memberColor(m);
     chip.textContent = m;
     chip.addEventListener('click', () => {
-      document.getElementById('nickname-input').value = m;
+      saveNickname(m);
+      overlay.classList.add('hidden');
+      document.getElementById('user-chip-name').textContent = m;
+      renderUserDropdown();
+      startEventsListener();
     });
     listEl.appendChild(chip);
   });
-}
-
-function confirmNickname() {
-  const name = document.getElementById('nickname-input').value.trim();
-  if (!name) { alert('請輸入暱稱'); return; }
-  saveNickname(name);
-  document.getElementById('nickname-overlay').classList.add('hidden');
-  document.getElementById('user-chip-name').textContent = name;
-  renderUserDropdown();
-  startEventsListener();
 }
 
 // ── User dropdown ─────────────────────────────────────────────────────────────
@@ -362,22 +397,6 @@ function renderUserDropdown() {
     dd.appendChild(item);
   });
 
-  const divider = document.createElement('div');
-  divider.className = 'dropdown-divider';
-  dd.appendChild(divider);
-
-  const addItem = document.createElement('div');
-  addItem.className   = 'dropdown-item';
-  addItem.textContent = '＋ 新增家人';
-  addItem.addEventListener('click', () => {
-    const name = prompt('輸入新家人暱稱：', '')?.trim();
-    if (!name) return;
-    saveNickname(name);
-    document.getElementById('user-chip-name').textContent = name;
-    dd.classList.add('hidden');
-    renderUserDropdown();
-  });
-  dd.appendChild(addItem);
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────────
@@ -395,12 +414,13 @@ function formatDateHeader(dateStr) {
   const d     = new Date(dateStr + 'T00:00:00');
   const today = new Date(); today.setHours(0,0,0,0);
   const diff  = Math.round((d - today) / 86400000);
-  if (diff === 0) return '今天';
-  if (diff === 1) return '明天';
-  if (diff === 2) return '後天';
-  const days = ['日','一','二','三','四','五','六'];
+  const days  = ['日','一','二','三','四','五','六'];
+  const weekLabel = `週${days[d.getDay()]}`;
+  if (diff === 0) return `今天 (${weekLabel})`;
+  if (diff === 1) return `明天 (${weekLabel})`;
+  if (diff === 2) return `後天 (${weekLabel})`;
   if (diff > 0 && diff < 7) return `星期${days[d.getDay()]}`;
-  return `${d.getMonth()+1} 月 ${d.getDate()} 日`;
+  return `${d.getMonth()+1} 月 ${d.getDate()} 日 (${weekLabel})`;
 }
 
 // ── Event listeners ───────────────────────────────────────────────────────────
@@ -443,10 +463,6 @@ document.addEventListener('click', () => {
   document.getElementById('user-dropdown').classList.add('hidden');
 });
 
-document.getElementById('nickname-confirm').addEventListener('click', confirmNickname);
-document.getElementById('nickname-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') confirmNickname();
-});
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 (function init() {

@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#4f46e5" />
-  <title>家庭行事曆</title>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Family Calendar</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,18 +13,16 @@
 <!-- ── Nickname Overlay ─────────────────────────────────────────────────── -->
 <div id="nickname-overlay" class="overlay hidden">
   <div class="overlay-card">
-    <h2>歡迎使用家庭行事曆</h2>
-    <p>請輸入你的暱稱，讓家人知道是你新增的事項</p>
+    <h2>Welcome to Family Calendar</h2>
+    <p>請選擇你是誰</p>
     <div id="known-members-list" class="chip-row"></div>
-    <input id="nickname-input" type="text" placeholder="輸入暱稱…" maxlength="20" />
-    <button id="nickname-confirm" class="btn-primary">確認</button>
   </div>
 </div>
 
 <!-- ── Header ──────────────────────────────────────────────────────────── -->
 <header>
   <div class="header-left">
-    <span class="app-title">家庭行事曆</span>
+    <span class="app-title">Family Calendar</span>
   </div>
   <div class="header-right">
     <div id="user-chip" class="user-chip" title="切換使用者">
@@ -49,13 +48,13 @@
     <button id="cal-today" class="today-btn">今天</button>
   </div>
   <div class="cal-grid">
-    <div class="cal-weekday">日</div>
     <div class="cal-weekday">一</div>
     <div class="cal-weekday">二</div>
     <div class="cal-weekday">三</div>
     <div class="cal-weekday">四</div>
     <div class="cal-weekday">五</div>
     <div class="cal-weekday">六</div>
+    <div class="cal-weekday">日</div>
   </div>
   <div id="cal-cells" class="cal-cells"></div>
 </div>

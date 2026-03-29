@@ -177,7 +177,13 @@ header {
   font-size: .85rem; font-weight: 600;
   width: 24px; height: 24px;
   display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
   margin-bottom: 2px;
+}
+.day-num.holiday { color: #ef4444; }
+.holiday-label {
+  font-size: 0.5rem; color: #ef4444;
+  line-height: 1; white-space: nowrap;
 }
 
 .event-dots { display: flex; flex-wrap: wrap; gap: 3px; padding: 2px 0; }
