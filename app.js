@@ -467,11 +467,11 @@ function formatDateHeader(dateStr) {
   const diff  = Math.round((d - today) / 86400000);
   const days  = ['日','一','二','三','四','五','六'];
   const weekLabel = `週${days[d.getDay()]}`;
+  const dateLabel = `${d.getMonth()+1} 月 ${d.getDate()} 日 (${weekLabel})`;
   if (diff === 0) return `今天 (${weekLabel})`;
   if (diff === 1) return `明天 (${weekLabel})`;
   if (diff === 2) return `後天 (${weekLabel})`;
-  if (diff > 0 && diff < 7) return `星期${days[d.getDay()]}`;
-  return `${d.getMonth()+1} 月 ${d.getDate()} 日 (${weekLabel})`;
+  return dateLabel;
 }
 
 // ── Event listeners ───────────────────────────────────────────────────────────
