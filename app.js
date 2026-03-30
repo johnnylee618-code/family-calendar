@@ -17,6 +17,9 @@ const FIXED_MEMBERS = ['Johnny', 'Zola', 'Zina'];
 const THEMES = [
   { id: 'techo',  name: '手帳風',     dot: '#c94040' },
   { id: 'matcha', name: '日系抹茶風', dot: '#6b9e74' },
+  { id: 'aizome', name: '藍染風',     dot: '#2a5a8c' },
+  { id: 'sakura', name: '桜風',       dot: '#c4607a' },
+  { id: 'sumi',   name: '墨風',       dot: '#4a4a4a' },
   { id: 'light',  name: '亮色',       dot: '#3b82f6' },
   { id: 'dark',   name: '暗色',       dot: '#8a9bb0' },
 ];
